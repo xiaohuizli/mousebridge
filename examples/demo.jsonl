@@ -1,0 +1,8 @@
+{"kind":"enter","edge":"right","y":0.5}
+{"kind":"move","x":100,"y":20}
+{"kind":"button","button":0,"down":true}
+{"kind":"move","x":40,"y":10}
+{"kind":"button","button":0,"down":false}
+{"kind":"wheel","y":1}
+{"kind":"move","x":-200,"y":0}
+{"kind":"ping"}

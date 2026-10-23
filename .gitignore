@@ -1,0 +1,12 @@
+/bin/
+*.test
+*.out
+.DS_Store
+.env
+/dist/
+/build/
+/MANIFEST.sha256
+/docs/research/*.zip
+/docs/research/*.asm
+/docs/research/*.json
+__pycache__/

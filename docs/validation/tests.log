@@ -1,0 +1,82 @@
+{"Time":"2026-10-23T17:13:31.079014+08:00","Action":"start","Package":"mousebridge/cmd/mousebridge"}
+{"Time":"2026-10-23T17:13:31.079061+08:00","Action":"output","Package":"mousebridge/cmd/mousebridge","Output":"?   \tmousebridge/cmd/mousebridge\t[no test files]\n"}
+{"Time":"2026-10-23T17:13:31.079064+08:00","Action":"skip","Package":"mousebridge/cmd/mousebridge","Elapsed":0}
+{"Time":"2026-10-23T17:13:31.353117+08:00","Action":"start","Package":"mousebridge/internal/bridge"}
+{"Time":"2026-10-23T17:13:31.353146+08:00","Action":"start","Package":"mousebridge/internal/desktop"}
+{"Time":"2026-10-23T17:13:31.353178+08:00","Action":"output","Package":"mousebridge/internal/desktop","Output":"?   \tmousebridge/internal/desktop\t[no test files]\n"}
+{"Time":"2026-10-23T17:13:31.353181+08:00","Action":"skip","Package":"mousebridge/internal/desktop","Elapsed":0}
+{"Time":"2026-10-23T17:13:31.888958+08:00","Action":"run","Package":"mousebridge/internal/bridge","Test":"TestControllerDoesNotStealLocalDragAndEscapeReturns"}
+{"Time":"2026-10-23T17:13:31.889025+08:00","Action":"output","Package":"mousebridge/internal/bridge","Test":"TestControllerDoesNotStealLocalDragAndEscapeReturns","Output":"=== RUN   TestControllerDoesNotStealLocalDragAndEscapeReturns\n"}
+{"Time":"2026-10-23T17:13:31.889114+08:00","Action":"output","Package":"mousebridge/internal/bridge","Test":"TestControllerDoesNotStealLocalDragAndEscapeReturns","Output":"--- PASS: TestControllerDoesNotStealLocalDragAndEscapeReturns (0.00s)\n"}
+{"Time":"2026-10-23T17:13:31.889122+08:00","Action":"pass","Package":"mousebridge/internal/bridge","Test":"TestControllerDoesNotStealLocalDragAndEscapeReturns","Elapsed":0}
+{"Time":"2026-10-23T17:13:31.889139+08:00","Action":"run","Package":"mousebridge/internal/bridge","Test":"TestDiscoveryFindsOnlyPairedReceiver"}
+{"Time":"2026-10-23T17:13:31.889142+08:00","Action":"output","Package":"mousebridge/internal/bridge","Test":"TestDiscoveryFindsOnlyPairedReceiver","Output":"=== RUN   TestDiscoveryFindsOnlyPairedReceiver\n"}
+{"Time":"2026-10-23T17:13:32.092825+08:00","Action":"output","Package":"mousebridge/internal/bridge","Test":"TestDiscoveryFindsOnlyPairedReceiver","Output":"--- PASS: TestDiscoveryFindsOnlyPairedReceiver (0.20s)\n"}
+{"Time":"2026-10-23T17:13:32.092877+08:00","Action":"pass","Package":"mousebridge/internal/bridge","Test":"TestDiscoveryFindsOnlyPairedReceiver","Elapsed":0.2}
+{"Time":"2026-10-23T17:13:32.093321+08:00","Action":"run","Package":"mousebridge/internal/bridge","Test":"TestDiscoveryRejectsForgedStaleAndReplayedReplies"}
+{"Time":"2026-10-23T17:13:32.093329+08:00","Action":"output","Package":"mousebridge/internal/bridge","Test":"TestDiscoveryRejectsForgedStaleAndReplayedReplies","Output":"=== RUN   TestDiscoveryRejectsForgedStaleAndReplayedReplies\n"}
+{"Time":"2026-10-23T17:13:32.194839+08:00","Action":"output","Package":"mousebridge/internal/bridge","Test":"TestDiscoveryRejectsForgedStaleAndReplayedReplies","Output":"--- PASS: TestDiscoveryRejectsForgedStaleAndReplayedReplies (0.10s)\n"}
+{"Time":"2026-10-23T17:13:32.194896+08:00","Action":"pass","Package":"mousebridge/internal/bridge","Test":"TestDiscoveryRejectsForgedStaleAndReplayedReplies","Elapsed":0.1}
+{"Time":"2026-10-23T17:13:32.194909+08:00","Action":"run","Package":"mousebridge/internal/bridge","Test":"TestRemoteMouseCrossesScreenAndReleasesDrag"}
+{"Time":"2026-10-23T17:13:32.194914+08:00","Action":"output","Package":"mousebridge/internal/bridge","Test":"TestRemoteMouseCrossesScreenAndReleasesDrag","Output":"=== RUN   TestRemoteMouseCrossesScreenAndReleasesDrag\n"}
+{"Time":"2026-10-23T17:13:32.195114+08:00","Action":"output","Package":"mousebridge/internal/bridge","Test":"TestRemoteMouseCrossesScreenAndReleasesDrag","Output":"--- PASS: TestRemoteMouseCrossesScreenAndReleasesDrag (0.00s)\n"}
+{"Time":"2026-10-23T17:13:32.195132+08:00","Action":"pass","Package":"mousebridge/internal/bridge","Test":"TestRemoteMouseCrossesScreenAndReleasesDrag","Elapsed":0}
+{"Time":"2026-10-23T17:13:32.195189+08:00","Action":"run","Package":"mousebridge/internal/bridge","Test":"TestIdlePeerTimeoutReleasesAllButtons"}
+{"Time":"2026-10-23T17:13:32.1952+08:00","Action":"output","Package":"mousebridge/internal/bridge","Test":"TestIdlePeerTimeoutReleasesAllButtons","Output":"=== RUN   TestIdlePeerTimeoutReleasesAllButtons\n"}
+{"Time":"2026-10-23T17:13:34.224219+08:00","Action":"output","Package":"mousebridge/internal/bridge","Test":"TestIdlePeerTimeoutReleasesAllButtons","Output":"--- PASS: TestIdlePeerTimeoutReleasesAllButtons (2.03s)\n"}
+{"Time":"2026-10-23T17:13:34.224301+08:00","Action":"pass","Package":"mousebridge/internal/bridge","Test":"TestIdlePeerTimeoutReleasesAllButtons","Elapsed":2.03}
+{"Time":"2026-10-23T17:13:34.224388+08:00","Action":"run","Package":"mousebridge/internal/bridge","Test":"TestReceiverRejectsSecondController"}
+{"Time":"2026-10-23T17:13:34.224405+08:00","Action":"output","Package":"mousebridge/internal/bridge","Test":"TestReceiverRejectsSecondController","Output":"=== RUN   TestReceiverRejectsSecondController\n"}
+{"Time":"2026-10-23T17:13:34.252163+08:00","Action":"output","Package":"mousebridge/internal/bridge","Test":"TestReceiverRejectsSecondController","Output":"--- PASS: TestReceiverRejectsSecondController (0.03s)\n"}
+{"Time":"2026-10-23T17:13:34.252192+08:00","Action":"pass","Package":"mousebridge/internal/bridge","Test":"TestReceiverRejectsSecondController","Elapsed":0.03}
+{"Time":"2026-10-23T17:13:34.252202+08:00","Action":"run","Package":"mousebridge/internal/bridge","Test":"TestMalformedOrOversizedFrameReleasesButtons"}
+{"Time":"2026-10-23T17:13:34.252205+08:00","Action":"output","Package":"mousebridge/internal/bridge","Test":"TestMalformedOrOversizedFrameReleasesButtons","Output":"=== RUN   TestMalformedOrOversizedFrameReleasesButtons\n"}
+{"Time":"2026-10-23T17:13:34.252225+08:00","Action":"run","Package":"mousebridge/internal/bridge","Test":"TestMalformedOrOversizedFrameReleasesButtons/19"}
+{"Time":"2026-10-23T17:13:34.252232+08:00","Action":"output","Package":"mousebridge/internal/bridge","Test":"TestMalformedOrOversizedFrameReleasesButtons/19","Output":"=== RUN   TestMalformedOrOversizedFrameReleasesButtons/19\n"}
+{"Time":"2026-10-23T17:13:34.264108+08:00","Action":"output","Package":"mousebridge/internal/bridge","Test":"TestMalformedOrOversizedFrameReleasesButtons/19","Output":"--- PASS: TestMalformedOrOversizedFrameReleasesButtons/19 (0.01s)\n"}
+{"Time":"2026-10-23T17:13:34.264132+08:00","Action":"pass","Package":"mousebridge/internal/bridge","Test":"TestMalformedOrOversizedFrameReleasesButtons/19","Elapsed":0.01}
+{"Time":"2026-10-23T17:13:34.264136+08:00","Action":"run","Package":"mousebridge/internal/bridge","Test":"TestMalformedOrOversizedFrameReleasesButtons/31"}
+{"Time":"2026-10-23T17:13:34.264139+08:00","Action":"output","Package":"mousebridge/internal/bridge","Test":"TestMalformedOrOversizedFrameReleasesButtons/31","Output":"=== RUN   TestMalformedOrOversizedFrameReleasesButtons/31\n"}
+{"Time":"2026-10-23T17:13:34.273949+08:00","Action":"output","Package":"mousebridge/internal/bridge","Test":"TestMalformedOrOversizedFrameReleasesButtons/31","Output":"--- PASS: TestMalformedOrOversizedFrameReleasesButtons/31 (0.01s)\n"}
+{"Time":"2026-10-23T17:13:34.273965+08:00","Action":"pass","Package":"mousebridge/internal/bridge","Test":"TestMalformedOrOversizedFrameReleasesButtons/31","Elapsed":0.01}
+{"Time":"2026-10-23T17:13:34.273969+08:00","Action":"run","Package":"mousebridge/internal/bridge","Test":"TestMalformedOrOversizedFrameReleasesButtons/2050"}
+{"Time":"2026-10-23T17:13:34.27397+08:00","Action":"output","Package":"mousebridge/internal/bridge","Test":"TestMalformedOrOversizedFrameReleasesButtons/2050","Output":"=== RUN   TestMalformedOrOversizedFrameReleasesButtons/2050\n"}
+{"Time":"2026-10-23T17:13:34.28223+08:00","Action":"output","Package":"mousebridge/internal/bridge","Test":"TestMalformedOrOversizedFrameReleasesButtons/2050","Output":"--- PASS: TestMalformedOrOversizedFrameReleasesButtons/2050 (0.01s)\n"}
+{"Time":"2026-10-23T17:13:34.28225+08:00","Action":"pass","Package":"mousebridge/internal/bridge","Test":"TestMalformedOrOversizedFrameReleasesButtons/2050","Elapsed":0.01}
+{"Time":"2026-10-23T17:13:34.282256+08:00","Action":"output","Package":"mousebridge/internal/bridge","Test":"TestMalformedOrOversizedFrameReleasesButtons","Output":"--- PASS: TestMalformedOrOversizedFrameReleasesButtons (0.03s)\n"}
+{"Time":"2026-10-23T17:13:34.28227+08:00","Action":"pass","Package":"mousebridge/internal/bridge","Test":"TestMalformedOrOversizedFrameReleasesButtons","Elapsed":0.03}
+{"Time":"2026-10-23T17:13:34.282288+08:00","Action":"run","Package":"mousebridge/internal/bridge","Test":"TestLeftEntryClampsAndIgnoresInFlightEventsAfterReturn"}
+{"Time":"2026-10-23T17:13:34.282293+08:00","Action":"output","Package":"mousebridge/internal/bridge","Test":"TestLeftEntryClampsAndIgnoresInFlightEventsAfterReturn","Output":"=== RUN   TestLeftEntryClampsAndIgnoresInFlightEventsAfterReturn\n"}
+{"Time":"2026-10-23T17:13:34.28232+08:00","Action":"output","Package":"mousebridge/internal/bridge","Test":"TestLeftEntryClampsAndIgnoresInFlightEventsAfterReturn","Output":"--- PASS: TestLeftEntryClampsAndIgnoresInFlightEventsAfterReturn (0.00s)\n"}
+{"Time":"2026-10-23T17:13:34.282332+08:00","Action":"pass","Package":"mousebridge/internal/bridge","Test":"TestLeftEntryClampsAndIgnoresInFlightEventsAfterReturn","Elapsed":0}
+{"Time":"2026-10-23T17:13:34.282336+08:00","Action":"run","Package":"mousebridge/internal/bridge","Test":"TestInvalidInputsNeverReachDesktop"}
+{"Time":"2026-10-23T17:13:34.282338+08:00","Action":"output","Package":"mousebridge/internal/bridge","Test":"TestInvalidInputsNeverReachDesktop","Output":"=== RUN   TestInvalidInputsNeverReachDesktop\n"}
+{"Time":"2026-10-23T17:13:34.282364+08:00","Action":"output","Package":"mousebridge/internal/bridge","Test":"TestInvalidInputsNeverReachDesktop","Output":"--- PASS: TestInvalidInputsNeverReachDesktop (0.00s)\n"}
+{"Time":"2026-10-23T17:13:34.282375+08:00","Action":"pass","Package":"mousebridge/internal/bridge","Test":"TestInvalidInputsNeverReachDesktop","Elapsed":0}
+{"Time":"2026-10-23T17:13:34.282382+08:00","Action":"run","Package":"mousebridge/internal/bridge","Test":"TestQueueFailureRestoresLocalControl"}
+{"Time":"2026-10-23T17:13:34.282384+08:00","Action":"output","Package":"mousebridge/internal/bridge","Test":"TestQueueFailureRestoresLocalControl","Output":"=== RUN   TestQueueFailureRestoresLocalControl\n"}
+{"Time":"2026-10-23T17:13:34.282412+08:00","Action":"output","Package":"mousebridge/internal/bridge","Test":"TestQueueFailureRestoresLocalControl","Output":"--- PASS: TestQueueFailureRestoresLocalControl (0.00s)\n"}
+{"Time":"2026-10-23T17:13:34.282416+08:00","Action":"pass","Package":"mousebridge/internal/bridge","Test":"TestQueueFailureRestoresLocalControl","Elapsed":0}
+{"Time":"2026-10-23T17:13:34.282424+08:00","Action":"run","Package":"mousebridge/internal/bridge","Test":"TestClosingListenerTerminatesActiveSessions"}
+{"Time":"2026-10-23T17:13:34.282426+08:00","Action":"output","Package":"mousebridge/internal/bridge","Test":"TestClosingListenerTerminatesActiveSessions","Output":"=== RUN   TestClosingListenerTerminatesActiveSessions\n"}
+{"Time":"2026-10-23T17:13:34.289811+08:00","Action":"output","Package":"mousebridge/internal/bridge","Test":"TestClosingListenerTerminatesActiveSessions","Output":"--- PASS: TestClosingListenerTerminatesActiveSessions (0.01s)\n"}
+{"Time":"2026-10-23T17:13:34.289822+08:00","Action":"pass","Package":"mousebridge/internal/bridge","Test":"TestClosingListenerTerminatesActiveSessions","Elapsed":0.01}
+{"Time":"2026-10-23T17:13:34.289824+08:00","Action":"run","Package":"mousebridge/internal/bridge","Test":"TestPairKeyAuthenticatesBothEnds"}
+{"Time":"2026-10-23T17:13:34.289826+08:00","Action":"output","Package":"mousebridge/internal/bridge","Test":"TestPairKeyAuthenticatesBothEnds","Output":"=== RUN   TestPairKeyAuthenticatesBothEnds\n"}
+{"Time":"2026-10-23T17:13:34.289851+08:00","Action":"run","Package":"mousebridge/internal/bridge","Test":"TestPairKeyAuthenticatesBothEnds/same_key"}
+{"Time":"2026-10-23T17:13:34.289854+08:00","Action":"output","Package":"mousebridge/internal/bridge","Test":"TestPairKeyAuthenticatesBothEnds/same_key","Output":"=== RUN   TestPairKeyAuthenticatesBothEnds/same_key\n"}
+{"Time":"2026-10-23T17:13:34.297456+08:00","Action":"output","Package":"mousebridge/internal/bridge","Test":"TestPairKeyAuthenticatesBothEnds/same_key","Output":"--- PASS: TestPairKeyAuthenticatesBothEnds/same_key (0.01s)\n"}
+{"Time":"2026-10-23T17:13:34.29747+08:00","Action":"pass","Package":"mousebridge/internal/bridge","Test":"TestPairKeyAuthenticatesBothEnds/same_key","Elapsed":0.01}
+{"Time":"2026-10-23T17:13:34.297473+08:00","Action":"run","Package":"mousebridge/internal/bridge","Test":"TestPairKeyAuthenticatesBothEnds/wrong_key"}
+{"Time":"2026-10-23T17:13:34.297486+08:00","Action":"output","Package":"mousebridge/internal/bridge","Test":"TestPairKeyAuthenticatesBothEnds/wrong_key","Output":"=== RUN   TestPairKeyAuthenticatesBothEnds/wrong_key\n"}
+{"Time":"2026-10-23T17:13:35.298594+08:00","Action":"output","Package":"mousebridge/internal/bridge","Test":"TestPairKeyAuthenticatesBothEnds/wrong_key","Output":"--- PASS: TestPairKeyAuthenticatesBothEnds/wrong_key (1.00s)\n"}
+{"Time":"2026-10-23T17:13:35.298666+08:00","Action":"pass","Package":"mousebridge/internal/bridge","Test":"TestPairKeyAuthenticatesBothEnds/wrong_key","Elapsed":1}
+{"Time":"2026-10-23T17:13:35.298721+08:00","Action":"output","Package":"mousebridge/internal/bridge","Test":"TestPairKeyAuthenticatesBothEnds","Output":"--- PASS: TestPairKeyAuthenticatesBothEnds (1.01s)\n"}
+{"Time":"2026-10-23T17:13:35.298727+08:00","Action":"pass","Package":"mousebridge/internal/bridge","Test":"TestPairKeyAuthenticatesBothEnds","Elapsed":1.01}
+{"Time":"2026-10-23T17:13:35.29878+08:00","Action":"run","Package":"mousebridge/internal/bridge","Test":"TestNetworkSessionInjectsAndReleasesOnDisconnect"}
+{"Time":"2026-10-23T17:13:35.298783+08:00","Action":"output","Package":"mousebridge/internal/bridge","Test":"TestNetworkSessionInjectsAndReleasesOnDisconnect","Output":"=== RUN   TestNetworkSessionInjectsAndReleasesOnDisconnect\n"}
+{"Time":"2026-10-23T17:13:35.313369+08:00","Action":"output","Package":"mousebridge/internal/bridge","Test":"TestNetworkSessionInjectsAndReleasesOnDisconnect","Output":"--- PASS: TestNetworkSessionInjectsAndReleasesOnDisconnect (0.01s)\n"}
+{"Time":"2026-10-23T17:13:35.3134+08:00","Action":"pass","Package":"mousebridge/internal/bridge","Test":"TestNetworkSessionInjectsAndReleasesOnDisconnect","Elapsed":0.01}
+{"Time":"2026-10-23T17:13:35.313445+08:00","Action":"output","Package":"mousebridge/internal/bridge","Output":"PASS\n"}
+{"Time":"2026-10-23T17:13:36.318455+08:00","Action":"output","Package":"mousebridge/internal/bridge","Output":"ok  \tmousebridge/internal/bridge\t4.965s\n"}
+{"Time":"2026-10-23T17:13:36.318518+08:00","Action":"pass","Package":"mousebridge/internal/bridge","Elapsed":4.965}

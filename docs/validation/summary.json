@@ -1,0 +1,85 @@
+{
+  "time_utc": "2026-10-23T09:13:30.734612+00:00",
+  "host": "macOS-26.5-arm64-arm-64bit-Mach-O",
+  "go": "go version go1.25.12 darwin/arm64",
+  "native_input_executed": false,
+  "commands": [
+    {
+      "name": "tests",
+      "command": [
+        "go",
+        "test",
+        "-race",
+        "-count=1",
+        "-json",
+        "./..."
+      ],
+      "exit_code": 0
+    },
+    {
+      "name": "vet",
+      "command": [
+        "go",
+        "vet",
+        "./..."
+      ],
+      "exit_code": 0
+    },
+    {
+      "name": "vet-windows",
+      "command": [
+        "env",
+        "GOOS=windows",
+        "GOARCH=amd64",
+        "CGO_ENABLED=0",
+        "go",
+        "vet",
+        "./..."
+      ],
+      "exit_code": 0
+    },
+    {
+      "name": "build",
+      "command": [
+        "make",
+        "build"
+      ],
+      "exit_code": 0
+    },
+    {
+      "name": "smoke",
+      "command": [
+        "python3",
+        "scripts/smoke.py",
+        "bin/mousebridge-macos-arm64"
+      ],
+      "exit_code": 0
+    }
+  ],
+  "tests_passed": [
+    "TestControllerDoesNotStealLocalDragAndEscapeReturns",
+    "TestDiscoveryFindsOnlyPairedReceiver",
+    "TestDiscoveryRejectsForgedStaleAndReplayedReplies",
+    "TestRemoteMouseCrossesScreenAndReleasesDrag",
+    "TestIdlePeerTimeoutReleasesAllButtons",
+    "TestReceiverRejectsSecondController",
+    "TestMalformedOrOversizedFrameReleasesButtons/19",
+    "TestMalformedOrOversizedFrameReleasesButtons/31",
+    "TestMalformedOrOversizedFrameReleasesButtons/2050",
+    "TestMalformedOrOversizedFrameReleasesButtons",
+    "TestLeftEntryClampsAndIgnoresInFlightEventsAfterReturn",
+    "TestInvalidInputsNeverReachDesktop",
+    "TestQueueFailureRestoresLocalControl",
+    "TestClosingListenerTerminatesActiveSessions",
+    "TestPairKeyAuthenticatesBothEnds/same_key",
+    "TestPairKeyAuthenticatesBothEnds/wrong_key",
+    "TestPairKeyAuthenticatesBothEnds",
+    "TestNetworkSessionInjectsAndReleasesOnDisconnect"
+  ],
+  "binaries": {
+    "mousebridge-macos-amd64": "0d6cfdb356852db43278c8fdb20419afa1c130d1c802c80a69d399192f198802",
+    "mousebridge-macos-arm64": "275bbf87e81a2c5cb3f6be070f3cd36d30eaf8a6b366e1ebf3b7736a9e9bbad7",
+    "mousebridge-windows-amd64.exe": "ac2aad04e535d71f6c2ab3b5d17849d9744e7e837b729a9b8f81fa957f01ef57",
+    "mousebridge-windows-arm64.exe": "94f1ec58bf2e454d8101101b0969325a18696b3c1718afacf6f13f6d274d4f66"
+  }
+}

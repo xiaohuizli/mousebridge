@@ -1,0 +1,99 @@
+name: Build and package
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: macos-15
+            platform: macos
+            arch: arm64
+            goos: darwin
+            cgo: '1'
+          - runner: macos-15-intel
+            platform: macos
+            arch: amd64
+            goos: darwin
+            cgo: '1'
+          - runner: windows-2025
+            platform: windows
+            arch: amd64
+            goos: windows
+            cgo: '0'
+          - runner: windows-2025
+            platform: windows
+            arch: arm64
+            goos: windows
+            cgo: '0'
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 20
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16 # v6
+        with:
+          go-version-file: go.mod
+          cache: false
+      - name: Test and vet on host OS
+        run: |
+          go test -count=1 ./...
+          go vet ./...
+      - name: Race detector (macOS)
+        if: runner.os == 'macOS'
+        run: go test -race -count=1 ./...
+      - name: Build host executable and run real network smoke test
+        run: |
+          mkdir -p build
+          go build -trimpath -o build/smoke-host.exe ./cmd/mousebridge
+          python scripts/smoke.py build/smoke-host.exe
+      - name: Build target binary
+        env:
+          GOOS: ${{ matrix.goos }}
+          GOARCH: ${{ matrix.arch }}
+          CGO_ENABLED: ${{ matrix.cgo }}
+        run: go build -trimpath -o build/mousebridge-target ./cmd/mousebridge
+      - name: Package and verify archive
+        run: python scripts/package.py --platform '${{ matrix.platform }}' --arch '${{ matrix.arch }}' --binary build/mousebridge-target
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: mousebridge-${{ matrix.platform }}-${{ matrix.arch }}
+          path: dist/*
+          if-no-files-found: error
+          retention-days: 30
+
+  release:
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          path: artifacts
+          merge-multiple: true
+      - name: Publish preview release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          TAG: ${{ github.ref_name }}
+        run: |
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            gh release upload "$TAG" artifacts/* --clobber
+          else
+            gh release create "$TAG" artifacts/* --verify-tag --prerelease --title "MouseBridge $TAG" --notes-file docs/RELEASE_NOTES.md
+          fi

@@ -1,0 +1,68 @@
+{
+  "status": "PASS",
+  "test": "two-process-loopback",
+  "native_injection": false,
+  "checks": [
+    "UDP discovery",
+    "TLS mutual pairing",
+    "ordered movement/button/drag/wheel",
+    "edge return",
+    "heartbeat",
+    "wrong key rejected"
+  ],
+  "received_events": [
+    {
+      "kind": "move",
+      "x": 1,
+      "y": 540
+    },
+    {
+      "kind": "move",
+      "x": 101,
+      "y": 560
+    },
+    {
+      "kind": "button",
+      "down": true
+    },
+    {
+      "kind": "move",
+      "x": 141,
+      "y": 570
+    },
+    {
+      "kind": "button"
+    },
+    {
+      "kind": "wheel",
+      "y": 1
+    }
+  ],
+  "replies": [
+    {
+      "kind": "entered"
+    },
+    {
+      "kind": "ok"
+    },
+    {
+      "kind": "ok"
+    },
+    {
+      "kind": "ok"
+    },
+    {
+      "kind": "ok"
+    },
+    {
+      "kind": "ok"
+    },
+    {
+      "kind": "return",
+      "y": 0.5282669138090825
+    },
+    {
+      "kind": "pong"
+    }
+  ]
+}
