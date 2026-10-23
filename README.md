@@ -26,7 +26,7 @@ v0.1 不含键盘转发、剪贴板、文件传输、图形界面、开机启动
 
 ## 直接运行
 
-`bin/` 提供本次构建的 macOS arm64/amd64、Windows amd64/arm64 程序。macOS 程序未做开发者签名和公证；可在本机用下述命令从源码构建。Windows 程序为交叉编译产物，尚未在 Windows 中运行。
+`bin/` 提供本次构建的 macOS arm64/amd64、Windows amd64/arm64 程序。macOS 程序未做开发者签名和公证；可在本机用下述命令从源码构建。GitHub Actions 已完成 macOS 两种架构与 Windows amd64 的自动化运行验证；Windows arm64 目前只交叉编译。详见 [云端构建验证](docs/CI.md)。
 
 假设 A 有物理鼠标，B 在 A 右侧。A 运行 `control`，B 运行 `receive`。两端都支持 Windows 或 macOS。交换角色时停止原进程并交换命令。
 

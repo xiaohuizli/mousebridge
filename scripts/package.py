@@ -30,7 +30,7 @@ if expected_os == 'darwin' and 'CGO_ENABLED=1' not in metadata:
 name = f'mousebridge-{a.platform}-{a.arch}'
 binary_name = name + ('.exe' if a.platform == 'windows' else '')
 files = {f'bin/{binary_name}':a.binary}
-for rel in ['README.md','docs/BEHAVIOR.md','docs/PROTOCOL.md','docs/VALIDATION.md','docs/RELEASE_NOTES.md','examples/demo.jsonl']:
+for rel in ['README.md','docs/BEHAVIOR.md','docs/PROTOCOL.md','docs/VALIDATION.md','docs/RELEASE_NOTES.md','docs/CI.md','examples/demo.jsonl']:
     files[rel] = root/rel
 for file in sorted((root/'docs/validation').glob('*')):
     if file.is_file(): files[file.relative_to(root).as_posix()] = file
