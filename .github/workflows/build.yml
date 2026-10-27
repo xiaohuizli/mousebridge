@@ -10,8 +10,16 @@ on:
 permissions:
   contents: read
 
+env:
+  PYTHONUTF8: '1'
+
+concurrency:
+  group: build-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build:
+    name: Test and CLI / ${{ matrix.platform }} ${{ matrix.arch }}
     strategy:
       fail-fast: false
       matrix:
@@ -47,6 +55,8 @@ jobs:
         with:
           go-version-file: go.mod
           cache: false
+      - name: Check application and release versions
+        run: python scripts/ci_version.py
       - name: Test and vet on host OS
         run: |
           go test -count=1 ./...
@@ -54,38 +64,127 @@ jobs:
       - name: Race detector (macOS)
         if: runner.os == 'macOS'
         run: go test -race -count=1 ./...
-      - name: Build host executable and run real network smoke test
+      - name: Test real network protocols without native input
         run: |
           mkdir -p build
           go build -trimpath -o build/smoke-host.exe ./cmd/mousebridge
           python scripts/smoke.py build/smoke-host.exe
-      - name: Build target binary
+          python scripts/smoke_auto.py build/smoke-host.exe
+          python scripts/smoke_open.py build/smoke-host.exe
+      - name: Build target CLI
         env:
           GOOS: ${{ matrix.goos }}
           GOARCH: ${{ matrix.arch }}
           CGO_ENABLED: ${{ matrix.cgo }}
         run: go build -trimpath -o build/mousebridge-target ./cmd/mousebridge
-      - name: Package and verify archive
-        run: python scripts/package.py --platform '${{ matrix.platform }}' --arch '${{ matrix.arch }}' --binary build/mousebridge-target
+      - name: Package and verify CLI archive
+        run: |
+          version="$(python scripts/ci_version.py)"
+          python scripts/package.py --version "$version" --platform '${{ matrix.platform }}' --arch '${{ matrix.arch }}' --binary build/mousebridge-target
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
-          name: mousebridge-${{ matrix.platform }}-${{ matrix.arch }}
-          path: dist/*
+          name: release-cli-${{ matrix.platform }}-${{ matrix.arch }}
+          path: |
+            dist/*.zip
+            dist/*.sha256
           if-no-files-found: error
           retention-days: 30
 
-  release:
-    if: startsWith(github.ref, 'refs/tags/v')
+  desktop-macos:
+    name: Universal macOS app and DMG
     needs: build
+    runs-on: macos-15
+    timeout-minutes: 20
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16 # v6
+        with:
+          go-version-file: go.mod
+          cache: false
+      - run: python3 scripts/ci_version.py
+      - name: Build universal app, DMG and ZIP
+        run: python3 scripts/package_macos_app.py
+      - name: Verify signatures, DMG mount and installed core
+        run: python3 scripts/verify_desktop_packages.py --platform macos
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: release-desktop-macos
+          path: |
+            dist/macos-app/*.dmg
+            dist/macos-app/*.zip
+            dist/macos-app/*.sha256
+          if-no-files-found: error
+          retention-days: 30
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: checks-desktop-macos
+          path: dist/macos-app/verification.json
+          if-no-files-found: error
+
+  desktop-windows:
+    name: Windows x64 and ARM64 setup
+    needs: build
+    runs-on: windows-2025
+    timeout-minutes: 20
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16 # v6
+        with:
+          go-version-file: go.mod
+          cache: false
+      - run: python scripts/ci_version.py
+      - name: Install pinned NSIS compiler
+        run: choco install nsis --version=3.12.0 --yes --no-progress --allow-downgrade
+      - name: Build native GUIs, portable ZIPs and dual-architecture installer
+        run: python scripts/package_windows_app.py
+      - name: Verify packages and silently install and uninstall on Windows
+        run: python scripts/verify_desktop_packages.py --platform windows
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: release-desktop-windows
+          path: |
+            dist/windows-app/*.exe
+            dist/windows-app/*.zip
+            dist/windows-app/*.sha256
+          if-no-files-found: error
+          retention-days: 30
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: checks-desktop-windows
+          path: dist/windows-app/verification.json
+          if-no-files-found: error
+
+  release:
+    name: Publish both installers to GitHub Releases
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: [build, desktop-macos, desktop-windows]
     runs-on: ubuntu-latest
     permissions:
       contents: write
     steps:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - name: Validate release version
+        run: python3 scripts/ci_version.py
       - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
         with:
+          pattern: release-*
           path: artifacts
           merge-multiple: true
+      - name: Require both desktop installers and verify all checksums
+        working-directory: artifacts
+        env:
+          TAG: ${{ github.ref_name }}
+        run: |
+          version="${TAG#v}"
+          test -f "MouseBridge-${version}-macos-universal.dmg"
+          test -f "MouseBridge-${version}-windows-setup.exe"
+          sha256sum --check *.sha256
       - name: Publish preview release
         env:
           GH_TOKEN: ${{ github.token }}
@@ -95,5 +194,5 @@ jobs:
           if gh release view "$TAG" >/dev/null 2>&1; then
             gh release upload "$TAG" artifacts/* --clobber
           else
-            gh release create "$TAG" artifacts/* --verify-tag --prerelease --title "MouseBridge $TAG" --notes-file docs/RELEASE_NOTES.md
+            gh release create "$TAG" artifacts/* --verify-tag --prerelease --title "MouseBridge $TAG" --generate-notes --notes 'Includes universal macOS DMG and Windows x64/ARM64 Setup, portable ZIPs and SHA-256 checksums. These builds are not Developer ID notarized or Authenticode signed. See the bundled usage instructions.'
           fi
