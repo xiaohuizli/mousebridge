@@ -21,7 +21,7 @@ import (
 	"unsafe"
 )
 
-const version = "0.3.1"
+const version = "0.3.2"
 const className = "MouseBridgeDesktop"
 const (
 	wmDestroy      = 0x0002

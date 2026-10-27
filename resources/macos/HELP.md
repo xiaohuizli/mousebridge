@@ -1,10 +1,10 @@
-# MouseBridge macOS 局域网互控 v0.3.1
+# MouseBridge macOS 局域网互控 v0.3.2
 
 原生 `.app`，支持 macOS 12+、Apple Silicon / Intel。无需安装 Go、Python 或使用终端。
 
 ## 同一局域网，打开即可互控
 
-1. 所有电脑更新到 v0.3.1，双击 `MouseBridge-0.3.1-macos-universal.dmg`，把 `MouseBridge.app` 拖到 Applications 后打开。也可使用 ZIP 解压安装。
+1. 所有电脑更新到 v0.3.2，双击 `MouseBridge-0.3.2-macos-universal.dmg`，把 `MouseBridge.app` 拖到 Applications 后打开。也可使用 ZIP 解压安装。
 2. “开启局域网发现与双向共享”默认打开。首次也不需要数字确认、配对、填写 IP 或密钥。
 3. 开启此功能即允许同一局域网内其他同样开启的软件自动连接并控制本机；本机也可以控制这些电脑。打开其他电脑时会自动出现在列表中。
 4. 两台电脑时自动选中对方。多台电脑时，从“控制目标”列表选择要控制的电脑。接收其他在线电脑的控制始终保持可用，无需切换控制端/接收端角色。

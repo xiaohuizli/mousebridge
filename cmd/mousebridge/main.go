@@ -17,7 +17,7 @@ import (
 	"time"
 )
 
-const version = "0.3.1"
+const version = "0.3.2"
 
 func main() {
 	log.SetFlags(log.Ltime)
@@ -67,7 +67,7 @@ func run() error {
 	}
 }
 func usage() error {
-	fmt.Print(`MouseBridge 0.3.1 — Windows / macOS multi-display mouse sharing
+	fmt.Print(`MouseBridge 0.3.2 — Windows / macOS multi-display mouse sharing
 
 keygen                         Generate a random pairing key; set MOUSEBRIDGE_KEY on both hosts.
 auto [-live]                   Auto discover/pair; JSON commands on stdin, events on stdout.
