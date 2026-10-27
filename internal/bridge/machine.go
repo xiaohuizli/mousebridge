@@ -4,6 +4,7 @@ package bridge
 import (
 	"errors"
 	"math"
+	"sync"
 )
 
 // Event is a version-1 command. Move is relative on the wire and absolute at Sink.
@@ -26,6 +27,33 @@ type Machine struct {
 	active              bool
 	edge                string
 	held                [3]bool
+	lease               *InputLease
+}
+
+// InputLease gives one remote mouse at a time ownership of this desktop, while
+// other connected peers remain idle and can enter as soon as it is released.
+type InputLease struct {
+	mu    sync.Mutex
+	owner *Machine
+}
+
+func NewLeasedMachine(s Sink, w, h int, lease *InputLease) *Machine {
+	m := NewMachine(s, w, h)
+	m.lease = lease
+	return m
+}
+
+func (m *Machine) acquire() bool {
+	if m.lease == nil {
+		return true
+	}
+	m.lease.mu.Lock()
+	defer m.lease.mu.Unlock()
+	if m.lease.owner != nil && m.lease.owner != m {
+		return false
+	}
+	m.lease.owner = m
+	return true
 }
 
 func NewMachine(s Sink, w, h int) *Machine {
@@ -42,6 +70,9 @@ func (m *Machine) Handle(e Event) (Event, error) {
 	case "enter":
 		if m.active || (e.Edge != "left" && e.Edge != "right") || e.Y < 0 || e.Y > 1 || m.width < 4 || m.height < 4 {
 			return Event{}, errors.New("invalid entry")
+		}
+		if !m.acquire() {
+			return Event{Kind: "return", Y: e.Y}, nil
 		}
 		m.edge = e.Edge
 		m.y = math.Round(e.Y * (m.height - 1))
@@ -98,6 +129,13 @@ func (m *Machine) Release() error {
 			err = errors.Join(err, m.sink.Apply(Event{Kind: "button", Button: b, Down: false}))
 			m.held[b] = false
 		}
+	}
+	if m.lease != nil {
+		m.lease.mu.Lock()
+		if m.lease.owner == m {
+			m.lease.owner = nil
+		}
+		m.lease.mu.Unlock()
 	}
 	return err
 }

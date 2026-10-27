@@ -17,7 +17,7 @@ import (
 	"time"
 )
 
-const version = "0.1.0"
+const version = "0.3.1"
 
 func main() {
 	log.SetFlags(log.Ltime)
@@ -52,6 +52,8 @@ func run() error {
 	ctx, cancel := signal.NotifyContext(context.Background(), os.Interrupt)
 	defer cancel()
 	switch cmd {
+	case "auto":
+		return automatic(ctx, key, os.Args[2:])
 	case "discover":
 		return discover(ctx, key, os.Args[2:])
 	case "receive":
@@ -65,9 +67,11 @@ func run() error {
 	}
 }
 func usage() error {
-	fmt.Print(`MouseBridge 0.1.0 — Windows / macOS primary-display mouse sharing
+	fmt.Print(`MouseBridge 0.3.1 — Windows / macOS primary-display mouse sharing
 
 keygen                         Generate a random pairing key; set MOUSEBRIDGE_KEY on both hosts.
+auto [-live]                   Auto discover/pair; JSON commands on stdin, events on stdout.
+auto -open-lan [-live]         Open LAN multi-peer sharing; no approval/allowlist.
 discover [-target IP:42047]     Find receivers paired with that key (IPv4 broadcast).
 receive [-listen :42048]        Dry run: log received input as JSON; does not inject.
 receive -live                  Enable real system mouse injection.

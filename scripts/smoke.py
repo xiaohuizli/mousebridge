@@ -19,18 +19,18 @@ def port(kind):
         return sock.getsockname()[1]
 
 env = dict(os.environ)
-env['MOUSEBRIDGE_KEY'] = subprocess.check_output([str(exe), 'keygen'], text=True).strip()
+env['MOUSEBRIDGE_KEY'] = subprocess.check_output([str(exe), 'keygen'], text=True, encoding="utf-8").strip()
 tcp, udp = port(socket.SOCK_STREAM), port(socket.SOCK_DGRAM)
 proc = subprocess.Popen([str(exe), 'receive', '-listen', f'127.0.0.1:{tcp}',
     '-discovery-listen', f'127.0.0.1:{udp}', '-name', 'smoke-receiver'],
-    env=env, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+    env=env, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, encoding="utf-8")
 startup = queue.Queue()
 threading.Thread(target=lambda: startup.put(proc.stderr.readline()), daemon=True).start()
 try:
     line = startup.get(timeout=5)
     assert 'live=false' in line, line
     def run(*args, pair_env=env):
-        return subprocess.run([str(exe), *args], env=pair_env, text=True,
+        return subprocess.run([str(exe), *args], env=pair_env, text=True, encoding="utf-8",
                               capture_output=True, timeout=8)
     found = run('discover', '-target', f'127.0.0.1:{udp}')
     assert found.returncode == 0, found.stderr
@@ -40,7 +40,7 @@ try:
     replies = [json.loads(x) for x in result.stdout.splitlines()]
     assert [r['kind'] for r in replies] == ['entered','ok','ok','ok','ok','ok','return','pong'], replies
     wrong = dict(env)
-    wrong['MOUSEBRIDGE_KEY'] = subprocess.check_output([str(exe), 'keygen'],text=True).strip()
+    wrong['MOUSEBRIDGE_KEY'] = subprocess.check_output([str(exe), 'keygen'],text=True, encoding="utf-8").strip()
     denied = run('send', '-peer', f'127.0.0.1:{tcp}', '-script', str(root/'examples/demo.jsonl'), pair_env=wrong)
     assert denied.returncode != 0, 'wrong pairing key accepted'
 finally:

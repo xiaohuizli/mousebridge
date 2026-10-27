@@ -17,6 +17,9 @@ import (
 
 type Native struct{ mu sync.Mutex }
 
+// Multiple LAN receivers and the local controller share the native C state.
+var nativeApplyMu sync.Mutex
+
 var captureMu sync.Mutex
 var captureHandler func(bridge.Sample) bool
 
@@ -28,8 +31,8 @@ func Open() (*Native, error) {
 }
 func (n *Native) Size() (int, int) { return int(C.mb_width()), int(C.mb_height()) }
 func (n *Native) Apply(e bridge.Event) error {
-	n.mu.Lock()
-	defer n.mu.Unlock()
+	nativeApplyMu.Lock()
+	defer nativeApplyMu.Unlock()
 	k := 0
 	switch e.Kind {
 	case "move":

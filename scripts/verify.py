@@ -15,8 +15,11 @@ commands = [
     ('tests', ['go','test','-race','-count=1','-json','./...']),
     ('vet', ['go','vet','./...']),
     ('vet-windows', ['env','GOOS=windows','GOARCH=amd64','CGO_ENABLED=0','go','vet','./...']),
+    ('vet-windows-arm64', ['env','GOOS=windows','GOARCH=arm64','CGO_ENABLED=0','go','vet','./...']),
     ('build', ['make','build']),
     ('smoke', [sys.executable,'scripts/smoke.py','bin/mousebridge-macos-arm64']),
+    ('smoke-auto', [sys.executable,'scripts/smoke_auto.py','bin/mousebridge-macos-arm64']),
+    ('smoke-open', [sys.executable,'scripts/smoke_open.py','bin/mousebridge-macos-arm64']),
 ]
 report = {'time_utc':datetime.datetime.now(datetime.timezone.utc).isoformat(),
           'host':platform.platform(), 'go':subprocess.check_output(['go','version'],text=True).strip(),
