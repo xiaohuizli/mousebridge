@@ -29,7 +29,7 @@ UTF-8 JSONL，每帧连同换行不超过 2048 字节；拒绝未知字段、未
 | leave | 无 | 释放所有由本会话按下的按钮；return |
 | ping | 无 | pong |
 
-进入远端前及返回后收到的在途 move/button/wheel 返回 idle，不注入；直到下一次 enter。再次 enter 必须处于非远端状态。原生适配接口中的 move 是绝对主屏坐标，而网络 move 是相对位移。
+进入远端前及返回后收到的在途 move/button/wheel 返回 idle，不注入；直到下一次 enter。再次 enter 必须处于非远端状态。原生适配接口中的 move 是相对虚拟桌面左上角的绝对坐标，而网络 move 是相对位移。
 
 ## 状态与故障
 
@@ -43,7 +43,7 @@ UTF-8 JSONL，每帧连同换行不超过 2048 字节；拒绝未知字段、未
 
 ## 原生实现限制
 
-Windows 使用 WH_MOUSE_LL、WH_KEYBOARD_LL（仅 Escape）和 SendInput；主显示器坐标按 0..65535 归一化，启用进程 DPI awareness。macOS 使用 CGEventTapCreate、CGEventPost、主显示器逻辑坐标；鼠标拖动按按钮状态生成 dragged 事件。macOS 点击计数采用500ms、4点范围的规则，支持生成双击/三击 clickState，但尚未对应用实际响应进行验证；不是复制系统可调双击偏好。macOS 非整数滚轮量先累计再注入整行，不保持触控板惯性/相位信息。
+Windows 使用 WH_MOUSE_LL、WH_KEYBOARD_LL（仅 Escape）和 SendInput；虚拟桌面坐标按 0..65535 归一化，并设置 MOUSEEVENTF_VIRTUALDESK，启用进程 DPI awareness。macOS 使用 CGEventTapCreate、CGEventPost、所有活动显示器组成的联合逻辑坐标；鼠标拖动按按钮状态生成 dragged 事件。macOS 点击计数采用500ms、4点范围的规则，支持生成双击/三击 clickState，但尚未对应用实际响应进行验证；不是复制系统可调双击偏好。macOS 非整数滚轮量先累计再注入整行，不保持触控板惯性/相位信息。
 
 API 依据：
 - [Microsoft LowLevelMouseProc](https://learn.microsoft.com/en-us/windows/win32/winmsg/lowlevelmouseproc)
@@ -80,3 +80,7 @@ API 依据：
 Mac 与 Windows 图形应用都在每次打开时生成 32 字节随机临时身份，仅在主进程内存及内置核心子进程的环境中传递，退出即丢弃；不读写钥匙串、凭据管理器或身份文件。旧版 macOS 钥匙串记录不访问、不自动删除。每次打开的公开设备 ID 可以改变，开放模式通过发现自动更新设备列表，不依赖持久化白名单。
 
 Windows 原生 Win32 窗口通过同样的 JSON 私有管道管理核心进程，关闭窗口先关闭核心标准输入，以取消服务、释放输入，再退出窗口。NSIS 安装向导按本机架构选择 x64 / ARM64 原生载荷，安装、快捷方式和卸载注册均属于当前用户，不修改防火墙规则或安装系统服务。macOS 使用通用 `.app`、DMG 和 ZIP 分发。当前构建环境没有 Windows GUI 或安装运行验收；PE 架构、编译、归档和核心协议验收不能替代 Windows 真机测试。
+
+## v0.3.2 多显示器边界
+
+控制端以完整桌面矩形判断左右最外侧边缘，同时要求采样点位于桌面范围内且沿外侧运动。显示器之间的接缝和副屏内部不触发 enter。Mac 捕获时减去桌面原点、注入时加回；Windows 使用虚拟桌面尺寸和原点，绝对输入映射到同一矩形。支持显示器位于主屏左侧或上方而产生负坐标的排列；更改显示器布局后需重启共享服务。事件协议不变，Esc、返回和断线释放行为保留。
