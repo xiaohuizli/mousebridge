@@ -63,7 +63,15 @@ def main():
         archive.with_suffix('.zip.sha256').write_text(f'{hashlib.sha256(archive.read_bytes()).hexdigest()}  {archive.name}\n')
     installer=output/f'MouseBridge-{version}-windows-setup.exe'
     switch='/' if os.name=='nt' else '-'
-    run(compiler,switch+'WX',switch+'V3',switch+'INPUTCHARSET','UTF8',f'{switch}DVERSION={version}',f'{switch}DPAYLOAD={build}',f'{switch}DOUTPUT={installer}',ROOT/'windows/installer.nsi')
+    # NSIS's Windows file globber does not accept mixed path separators.
+    # Pass each full path from pathlib; no platform-specific suffix is appended
+    # inside the installer script.
+    inputs={'HELP_FILE':build/'WINDOWS_APP.txt'}
+    for arch in ['amd64','arm64']:
+        for kind,name in [('GUI','MouseBridge.exe'),('CORE','mousebridge-core.exe'),('INFO','BUILD-INFO.json'),('SUMS','SHA256SUMS')]:
+            inputs[f'{kind}_{arch.upper()}']=build/arch/name
+    definitions=[f'{switch}D{name}={path}' for name,path in inputs.items()]
+    run(compiler,switch+'WX',switch+'V3',switch+'INPUTCHARSET','UTF8',f'{switch}DVERSION={version}',f'{switch}DOUTPUT={installer}',*definitions,ROOT/'windows/installer.nsi')
     assert pe_info(installer)['machine']==0x14c  # NSIS bootstrap; installs the native payload for the OS.
     installer.with_suffix('.exe.sha256').write_text(f'{hashlib.sha256(installer.read_bytes()).hexdigest()}  {installer.name}\n')
     print(f'Installer: {installer}',flush=True)

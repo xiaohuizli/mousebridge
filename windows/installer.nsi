@@ -60,17 +60,17 @@ FunctionEnd
 Section "MouseBridge" MainSection
   SetOutPath "$INSTDIR"
   ${If} ${IsNativeARM64}
-    File /oname=MouseBridge.exe "${PAYLOAD}/arm64/MouseBridge.exe"
-    File /oname=mousebridge-core.exe "${PAYLOAD}/arm64/mousebridge-core.exe"
-    File /oname=BUILD-INFO.json "${PAYLOAD}/arm64/BUILD-INFO.json"
-    File /oname=SHA256SUMS "${PAYLOAD}/arm64/SHA256SUMS"
+    File /oname=MouseBridge.exe "${GUI_ARM64}"
+    File /oname=mousebridge-core.exe "${CORE_ARM64}"
+    File /oname=BUILD-INFO.json "${INFO_ARM64}"
+    File /oname=SHA256SUMS "${SUMS_ARM64}"
   ${Else}
-    File /oname=MouseBridge.exe "${PAYLOAD}/amd64/MouseBridge.exe"
-    File /oname=mousebridge-core.exe "${PAYLOAD}/amd64/mousebridge-core.exe"
-    File /oname=BUILD-INFO.json "${PAYLOAD}/amd64/BUILD-INFO.json"
-    File /oname=SHA256SUMS "${PAYLOAD}/amd64/SHA256SUMS"
+    File /oname=MouseBridge.exe "${GUI_AMD64}"
+    File /oname=mousebridge-core.exe "${CORE_AMD64}"
+    File /oname=BUILD-INFO.json "${INFO_AMD64}"
+    File /oname=SHA256SUMS "${SUMS_AMD64}"
   ${EndIf}
-  File /oname=使用说明.txt "${PAYLOAD}/WINDOWS_APP.txt"
+  File /oname=使用说明.txt "${HELP_FILE}"
   WriteUninstaller "$INSTDIR\Uninstall.exe"
   CreateDirectory "$SMPROGRAMS\MouseBridge"
   CreateShortcut "$SMPROGRAMS\MouseBridge\MouseBridge.lnk" "$INSTDIR\MouseBridge.exe"
