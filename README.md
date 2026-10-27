@@ -2,7 +2,7 @@
 
 独立实现的局域网鼠标共享项目，支持 Windows 和 macOS。依据 ShareMouse 静态分析中确认的“捕获输入 → 网络传输 → 远端注入”机制编写，使用自己的协议，不加载或复用 ShareMouse 二进制，不与其私有协议互通。
 
-**当前是可构建的 v0.1 原型。协议、状态机、故障处理和两个真实进程的网络联调已经验证；Windows/macOS 双机的系统捕获与注入尚未实测。** 完整结果见 [验证记录](docs/VALIDATION.md)，原程序与本项目的待确认项见 [行为清单](docs/BEHAVIOR.md)。
+**当前是可构建的 v0.3 原型。协议、状态机、故障处理和两个真实进程的网络联调已经验证；Windows/macOS 双机的系统捕获与注入尚未实测。** 完整结果见 [验证记录](docs/VALIDATION.md)，原程序与本项目的待确认项见 [行为清单](docs/BEHAVIOR.md)。
 
 ## 已实现
 
@@ -14,7 +14,15 @@
 - 400ms 心跳，2 秒读写超时，连接关闭/超时/协议错误释放远端按键；控制端恢复本机鼠标。
 - 默认接收端只打印输入事件，`-live` 才进行真实注入。
 
-v0.1 不含键盘转发、剪贴板、文件传输、图形界面、开机启动、多显示器布局、第三台电脑路由或 ShareMouse 兼容性。Escape 的本机键盘钩子仅用于退出远端控制，不转发键盘内容。
+v0.3 不含键盘转发、剪贴板、文件传输、开机启动、多显示器布局、复杂的多屏路由或 ShareMouse 兼容性。Escape 的本机键盘钩子仅用于退出远端控制，不转发键盘内容。
+
+## macOS 双击应用
+
+`MouseBridge.app` 默认开启局域网开放发现，无需填写 IP、密钥或首次数字确认。同一局域网内开启该功能的电脑可自动连接，每台同时具备控制与接收能力；两台时自动选择对方，多台时可从列表切换控制目标，当前最多连接 16 台其他电脑。开启即允许该局域网内其他开放实例控制本机。关闭发现会结束所有远端会话。实际鼠标操作仍需系统辅助功能和输入监控权限。
+
+运行 `python3 scripts/package_macos_app.py`，在 `dist/macos-app/` 生成支持 Apple Silicon / Intel 的通用 `.app`、DMG 和 ZIP。v0.3.1 每次启动生成临时身份，不再访问 macOS 钥匙串。应用要求 macOS 12+，本地 ad-hoc 签名，未公证。详见 [macOS 应用说明](docs/MACOS_APP.md)。
+
+Windows 同款原生窗口：运行 `python3 scripts/package_windows_app.py`，生成自动选择 x64 / ARM64 的每用户安装向导和便携包。双击安装/启动即可使用开放局域网互控，无需命令行。详见 [Windows 应用说明](docs/WINDOWS_APP.md)。
 
 ## 下载与自动打包
 
@@ -22,7 +30,7 @@ v0.1 不含键盘转发、剪贴板、文件传输、图形界面、开机启动
 
 - [Releases 下载](https://github.com/xiaohuizli/mousebridge/releases)：分别提供 macOS arm64/amd64、Windows amd64/arm64 便携 ZIP 与校验值。
 - [Actions](https://github.com/xiaohuizli/mousebridge/actions)：main 推送运行测试与打包；v* 标签成功构建后发布预览版。
-- ZIP 解压后保留 `bin/` 和文档目录，以下命令在解压根目录执行。当前交付为命令行便携包，不含图形安装向导。
+- 命令行 ZIP 解压后保留 `bin/` 和文档目录，以下命令在解压根目录执行。GitHub Actions 同时构建命令行便携包、macOS 通用 DMG / ZIP 和 Windows 双架构 Setup / ZIP。主分支可下载 Actions 产物；匹配版本的 v* 标签发布到 Releases。
 
 ## 直接运行
 
@@ -135,4 +143,4 @@ python3 scripts/smoke.py bin/mousebridge-macos-arm64
 | `internal/bridge/transport.go` | 帧限制、超时、独占控制、会话关闭 |
 | `internal/desktop` | Windows 低级钩子/SendInput；macOS Event Tap/CGEventPost；记录适配器 |
 
-这是原生单进程程序。系统回调与 Go 逻辑之间使用函数调用和有界队列，没有 Electron 主进程/渲染进程 IPC。网络协议详见 [PROTOCOL.md](docs/PROTOCOL.md)。
+命令行核心是原生单进程程序，系统回调与 Go 逻辑通过函数调用和有界队列协作。macOS 应用由 AppKit 界面和其管理的核心子进程组成，使用私有管道交换状态和设置，没有 Electron 依赖。网络协议详见 [PROTOCOL.md](docs/PROTOCOL.md)。
