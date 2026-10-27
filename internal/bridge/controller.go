@@ -5,7 +5,8 @@ import (
 	"time"
 )
 
-// Sample contains primary-screen coordinates plus physical relative movement.
+// Sample contains coordinates relative to the entire local desktop plus
+// physical relative movement.
 type Sample struct {
 	Kind         string
 	X, Y, DX, DY float64
@@ -46,7 +47,10 @@ func (c *Controller) Handle(s Sample) bool {
 			c.held[s.Button] = s.Down
 		}
 		dragging := c.held[0] || c.held[1] || c.held[2]
-		atEdge := (c.edge == "right" && s.X >= c.width-1 && s.DX > 0) || (c.edge == "left" && s.X <= 0 && s.DX < 0)
+		// A sample on another monitor must not count as crossing this edge.
+		// Native backends normalize the full desktop, including negative origins.
+		inside := s.X >= 0 && s.X < c.width && s.Y >= 0 && s.Y < c.height
+		atEdge := inside && ((c.edge == "right" && s.X >= c.width-1 && s.DX > 0) || (c.edge == "left" && s.X <= 0 && s.DX < 0))
 		if s.Kind == "move" && atEdge && !dragging && time.Now().After(c.cooldown) {
 			c.y = clamp(s.Y/(c.height-1), 0, 1)
 			if !c.send(Event{Kind: "enter", Y: c.y, Edge: c.edge}) {

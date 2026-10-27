@@ -1,4 +1,4 @@
-// Package desktop adapts primary-display mouse capture/injection to the OS.
+// Package desktop adapts full-desktop mouse capture/injection to the OS.
 package desktop
 
 import (

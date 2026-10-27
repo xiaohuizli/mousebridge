@@ -15,7 +15,9 @@ import (
 	"sync"
 )
 
-type Native struct{ mu sync.Mutex }
+type Native struct {
+	left, top, width, height int
+}
 
 // Multiple LAN receivers and the local controller share the native C state.
 var nativeApplyMu sync.Mutex
@@ -27,9 +29,13 @@ func Open() (*Native, error) {
 	if C.mb_allowed() == 0 {
 		return nil, fmt.Errorf("macOS Accessibility permission required for this terminal/binary; enable it in System Settings, then restart")
 	}
-	return &Native{}, nil
+	var left, top, width, height C.int
+	if C.mb_bounds(&left, &top, &width, &height) != 0 || width < 4 || height < 4 {
+		return nil, fmt.Errorf("no interactive desktop")
+	}
+	return &Native{left: int(left), top: int(top), width: int(width), height: int(height)}, nil
 }
-func (n *Native) Size() (int, int) { return int(C.mb_width()), int(C.mb_height()) }
+func (n *Native) Size() (int, int) { return n.width, n.height }
 func (n *Native) Apply(e bridge.Event) error {
 	nativeApplyMu.Lock()
 	defer nativeApplyMu.Unlock()
@@ -37,6 +43,8 @@ func (n *Native) Apply(e bridge.Event) error {
 	switch e.Kind {
 	case "move":
 		k = 1
+		e.X += float64(n.left)
+		e.Y += float64(n.top)
 	case "button":
 		k = 2
 	case "wheel":
@@ -58,7 +66,11 @@ func (n *Native) Capture(ctx context.Context, fn func(bridge.Sample) bool) error
 	defer captureMu.Unlock()
 	runtime.LockOSThread()
 	defer runtime.UnlockOSThread()
-	captureHandler = fn
+	captureHandler = func(s bridge.Sample) bool {
+		s.X -= float64(n.left)
+		s.Y -= float64(n.top)
+		return fn(s)
+	}
 	defer func() { captureHandler = nil }()
 	C.mb_reset()
 	stop := context.AfterFunc(ctx, func() { C.mb_stop() })

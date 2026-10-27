@@ -13,7 +13,7 @@ root = Path(__file__).resolve().parents[1]
 p = argparse.ArgumentParser()
 p.add_argument('--platform', choices=['macos','windows'], required=True)
 p.add_argument('--arch', choices=['amd64','arm64'], required=True)
-p.add_argument('--version', default='0.3.1')
+p.add_argument('--version', default='0.3.2')
 p.add_argument('--binary', type=Path, required=True)
 p.add_argument('--output', type=Path, default=root/'dist')
 a = p.parse_args()
