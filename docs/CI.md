@@ -47,3 +47,15 @@
 首次尝试 [运行 40456745921](https://github.com/xiaohuizli/mousebridge/actions/runs/40456745921) 中，Mac 任务成功，Windows 因 NSIS 文件路径混用分隔符失败。提交 `737c23c` 改为传入系统原生完整路径后重建通过；未把首次失败记为成功。
 
 本次触发为主分支推送，没有创建版本标签，因此 Release 任务按设计跳过；两种安装包可在成功运行的 Artifacts 中下载。标签发布仍按上文规则执行。Windows GUI 交互、ARM64 原生运行和实体机鼠标互控仍不在这次自动化验收范围内。
+
+## v0.3.2 多屏边界修复构建（2026-10-27）
+
+- 源码提交：`52e0f98b395d0f980ef96c72bde45a96788d5dc2`，包含多屏修复 `e05a9c98ea145fc642fb423415e59f021dfbeeb5`。
+- [main 构建](https://github.com/xiaohuizli/mousebridge/actions/runs/40483410357)：成功，4 分 14 秒，8 份 Actions 产物。
+- [v0.3.2 标签构建](https://github.com/xiaohuizli/mousebridge/actions/runs/40483439743)：成功，4 分 35 秒。四个平台基础测试和 CLI 打包、Mac 通用应用及 DMG、Windows x64/ARM64 安装包、标签发布任务全部通过。
+- Mac 检查包括通用架构、签名、源码摘要、ZIP、只读 DMG 与已打包核心网络验证；Windows 检查包括 PE/源码/摘要、静默安装、安装后核心网络验证及卸载。
+- [v0.3.2 预览版](https://github.com/xiaohuizli/mousebridge/releases/tag/v0.3.2) 已发布，包含 9 个分发文件及各自的 SHA-256 校验文件，另有 GitHub 自动提供的两种源码归档。
+- Mac DMG SHA-256：`d857d9a34f99ec41442a6291fe15598c88f94d3a91403b2d4a64566abb8b9ac8`。
+- Windows Setup SHA-256：`363a85067b74f702fb2f37e2aa5e42ab5c3d32a2379e0f2ee76be161bdd612d9`。
+
+验证不操作实体电脑鼠标；双机真实鼠标、多屏注入、DPI/Retina 与系统权限更新后的行为仍需人工复测。Actions 的 Node 20 弃用与 runner 迁移提示未导致构建失败。
