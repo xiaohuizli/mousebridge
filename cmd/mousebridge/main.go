@@ -67,7 +67,7 @@ func run() error {
 	}
 }
 func usage() error {
-	fmt.Print(`MouseBridge 0.3.1 — Windows / macOS primary-display mouse sharing
+	fmt.Print(`MouseBridge 0.3.1 — Windows / macOS multi-display mouse sharing
 
 keygen                         Generate a random pairing key; set MOUSEBRIDGE_KEY on both hosts.
 auto [-live]                   Auto discover/pair; JSON commands on stdin, events on stdout.
@@ -238,7 +238,7 @@ func control(parent context.Context, key []byte, args []string) error {
 			}
 		}
 	}()
-	log.Printf("connected to %s; cross %s primary-display edge; Escape returns; Ctrl+C stops", *peer, *edge)
+	log.Printf("connected to %s; cross %s outer desktop edge; Escape returns; Ctrl+C stops", *peer, *edge)
 	err = native.Capture(ctx, c.Handle)
 	cancel()
 	c.Disconnect()

@@ -23,8 +23,9 @@ var unhook = user32.NewProc("UnhookWindowsHookEx")
 var marker uintptr = 0x4d424731
 
 type Native struct {
-	mu   sync.Mutex
-	w, h int
+	mu        sync.Mutex
+	w, h      int
+	left, top int32
 }
 type point struct{ X, Y int32 }
 type mouseHook struct {
@@ -57,12 +58,15 @@ type message struct {
 
 func Open() (*Native, error) {
 	user32.NewProc("SetProcessDPIAware").Call()
-	w, _, _ := getMetrics.Call(0)
-	h, _, _ := getMetrics.Call(1)
+	// SM_*VIRTUALSCREEN covers all monitors, including those left/above primary.
+	left, _, _ := getMetrics.Call(76)
+	top, _, _ := getMetrics.Call(77)
+	w, _, _ := getMetrics.Call(78)
+	h, _, _ := getMetrics.Call(79)
 	if w < 4 || h < 4 {
 		return nil, fmt.Errorf("no interactive desktop")
 	}
-	return &Native{w: int(w), h: int(h)}, nil
+	return &Native{w: int(w), h: int(h), left: int32(left), top: int32(top)}, nil
 }
 func (n *Native) Size() (int, int) { return n.w, n.h }
 func (n *Native) Apply(e bridge.Event) error {
@@ -74,7 +78,9 @@ func (n *Native) Apply(e bridge.Event) error {
 	}
 	switch e.Kind {
 	case "move":
-		add(0x8001, int32(math.Round(e.X*65535/float64(n.w-1))), int32(math.Round(e.Y*65535/float64(n.h-1))), 0)
+		// ABSOLUTE | VIRTUALDESK | MOVE maps normalized input to the same desktop
+		// rectangle used by capture and edge detection.
+		add(0xc001, int32(math.Round(e.X*65535/float64(n.w-1))), int32(math.Round(e.Y*65535/float64(n.h-1))), 0)
 	case "button":
 		if e.Button < 0 || e.Button > 2 {
 			return fmt.Errorf("invalid button")
@@ -124,7 +130,7 @@ func (n *Native) Capture(ctx context.Context, fn func(bridge.Sample) bool) error
 			prev = p.Pt
 			return next()
 		}
-		s := bridge.Sample{X: float64(p.Pt.X), Y: float64(p.Pt.Y)}
+		s := bridge.Sample{X: float64(p.Pt.X - n.left), Y: float64(p.Pt.Y - n.top)}
 		switch wp {
 		case 0x200:
 			s.Kind = "move"

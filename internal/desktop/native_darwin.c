@@ -4,6 +4,7 @@
 #include <ApplicationServices/ApplicationServices.h>
 #include <stdatomic.h>
 #include <math.h>
+#include <stdlib.h>
 extern int goMouseEvent(int kind,double x,double y,double dx,double dy,int button,int down);
 static const int64_t marker=0x4d424731;
 static atomic_int stopped=0;
@@ -14,8 +15,19 @@ static int clickCount[3];
 static double wheelX=0,wheelY=0;
 static CFMachPortRef tap;
 int mb_allowed(void){return CGPreflightPostEventAccess();}
-int mb_width(void){return (int)CGDisplayBounds(CGMainDisplayID()).size.width;}
-int mb_height(void){return (int)CGDisplayBounds(CGMainDisplayID()).size.height;}
+int mb_bounds(int *left,int *top,int *width,int *height){
+ uint32_t count=0;
+ if(CGGetActiveDisplayList(0,NULL,&count)!=kCGErrorSuccess||count==0)return 1;
+ CGDirectDisplayID *displays=calloc(count,sizeof(*displays));if(!displays)return 1;
+ if(CGGetActiveDisplayList(count,displays,&count)!=kCGErrorSuccess){free(displays);return 1;}
+ CGRect bounds=CGRectNull;
+ for(uint32_t i=0;i<count;i++)bounds=CGRectUnion(bounds,CGDisplayBounds(displays[i]));
+ free(displays);
+ if(CGRectIsNull(bounds)||CGRectIsEmpty(bounds))return 1;
+ *left=(int)CGRectGetMinX(bounds);*top=(int)CGRectGetMinY(bounds);
+ *width=(int)CGRectGetWidth(bounds);*height=(int)CGRectGetHeight(bounds);
+ return 0;
+}
 void mb_stop(void){atomic_store(&stopped,1);}
 void mb_reset(void){atomic_store(&stopped,0);}
 static CGEventRef callback(CGEventTapProxy proxy,CGEventType type,CGEventRef event,void *info){
