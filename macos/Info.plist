@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0"><dict>
+  <key>CFBundleName</key><string>MouseBridge</string>
+  <key>CFBundleDisplayName</key><string>MouseBridge</string>
+  <key>CFBundleIdentifier</key><string>io.mousebridge.desktop</string>
+  <key>CFBundleExecutable</key><string>MouseBridge</string>
+  <key>CFBundlePackageType</key><string>APPL</string>
+  <key>CFBundleShortVersionString</key><string>0.3.1</string>
+  <key>CFBundleVersion</key><string>4</string>
+  <key>CFBundleIconFile</key><string>MouseBridge</string>
+  <key>LSMinimumSystemVersion</key><string>12.0</string>
+  <key>NSHighResolutionCapable</key><true/>
+  <key>NSPrincipalClass</key><string>NSApplication</string>
+  <key>NSLocalNetworkUsageDescription</key><string>MouseBridge 需要通过局域网连接另一台电脑，共享鼠标输入。</string>
+  <key>NSHumanReadableCopyright</key><string>MouseBridge contributors</string>
+</dict></plist>

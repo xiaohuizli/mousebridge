@@ -13,14 +13,14 @@ root = Path(__file__).resolve().parents[1]
 p = argparse.ArgumentParser()
 p.add_argument('--platform', choices=['macos','windows'], required=True)
 p.add_argument('--arch', choices=['amd64','arm64'], required=True)
-p.add_argument('--version', default='0.1.0')
+p.add_argument('--version', default='0.3.1')
 p.add_argument('--binary', type=Path, required=True)
 p.add_argument('--output', type=Path, default=root/'dist')
 a = p.parse_args()
 if not re.fullmatch(r'[0-9]+\.[0-9]+\.[0-9]+(?:-[a-zA-Z0-9.-]+)?', a.version):
     p.error('version must be semver without a leading v')
 a.binary = a.binary.resolve()
-metadata = subprocess.check_output(['go','version','-m',str(a.binary)], text=True)
+metadata = subprocess.check_output(['go','version','-m',str(a.binary)], text=True, encoding="utf-8")
 expected_os = 'darwin' if a.platform == 'macos' else 'windows'
 for item in (f'GOOS={expected_os}',f'GOARCH={a.arch}'):
     if not re.search(r'(?m)^\s*build\s+'+re.escape(item)+r'\s*$',metadata):
@@ -30,12 +30,12 @@ if expected_os == 'darwin' and 'CGO_ENABLED=1' not in metadata:
 name = f'mousebridge-{a.platform}-{a.arch}'
 binary_name = name + ('.exe' if a.platform == 'windows' else '')
 files = {f'bin/{binary_name}':a.binary}
-for rel in ['README.md','docs/BEHAVIOR.md','docs/PROTOCOL.md','docs/VALIDATION.md','docs/RELEASE_NOTES.md','docs/CI.md','examples/demo.jsonl']:
+for rel in ['README.md','docs/BEHAVIOR.md','docs/PROTOCOL.md','docs/VALIDATION.md','docs/RELEASE_NOTES.md','docs/CI.md','resources/macos/HELP.md','resources/windows/HELP.md','examples/demo.jsonl']:
     files[rel] = root/rel
 for file in sorted((root/'docs/validation').glob('*')):
     if file.is_file(): files[file.relative_to(root).as_posix()] = file
 info = {'version':a.version,'platform':a.platform,'architecture':a.arch,
-        'commit':subprocess.check_output(['git','rev-parse','HEAD'],cwd=root,text=True).strip(),
+        'commit':subprocess.check_output(['git','rev-parse','HEAD'],cwd=root,text=True, encoding="utf-8").strip(),
         'builder':platform.platform(),'go_metadata':metadata,
         'signed':False,'notarized':False,'native_input_verified':False,
         'binary_sha256':hashlib.sha256(a.binary.read_bytes()).hexdigest()}
